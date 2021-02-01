@@ -1,0 +1,195 @@
+import React, { Component } from 'react'
+import "./comb.css"
+
+export default class comB extends Component {
+    constructor() {
+        super()
+        this.state = {
+            list: [],
+            FormData: {
+                id: Math.random().toString(36).substr(2, 9),
+                Fname: "",
+                Lname: "",
+                Email: "",
+            },
+            error: {
+                FnameError: "",
+                LnameError: "",
+                EmailError: "",
+            }
+        }
+    }
+    handleInput = (e) => {
+        this.setState({
+            ...this.state,
+            FormData: {
+                ...this.state.FormData,
+                [e.target.name]: e.target.value,
+            },
+            error: {
+                FnameError: "",
+                LnameError: "",
+                EmailError: "",
+            }
+        })
+
+    }
+    handleSubmit = (e) => {
+        const {
+            id,
+            Fname,
+            Lname,
+            Email,
+        } = this.state.FormData;
+        e.preventDefault();
+        
+        if (Fname === "") {
+            return this.setState({
+                error: {
+                    ...this.state.erros,
+                    FnameError: "First Name is Required",
+                }
+            })
+        } else if (Fname.length < 3) {
+           return this.setState({
+                error: { FnameError: "Please enter atleast 3 or more character" },
+            });
+            
+
+        }
+         
+
+        this.setState({
+            list: [...this.state.list, { ...this.state.FormData, id: Math.random().toString(36).substr(2, 9) }],
+            FormData: {
+                id: '',
+                Fname: "",
+                Lname: "",
+                Email: "",
+            },
+
+        })
+
+        if (id) {
+            const index = this.state.list.findIndex(item => {
+                return item.id === id
+            })
+            if (index >= 0) {
+                const dummy = this.state.list;
+                dummy[index].Fname = Fname
+                dummy[index].Lname = Lname
+                dummy[index].Email = Email
+                this.setState({
+                    ...this.state,
+                    list: dummy,
+                    FormData: {
+                        Fname: "",
+                        Lname: "",
+                        Email: "",
+                    },
+
+                })
+                localStorage.setItem('data', JSON.stringify(this.state.list))
+
+
+            }
+        }
+        if (localStorage.getItem('data') == null) {
+            var data = [];
+            data.push(this.state.FormData)
+            localStorage.setItem('data', JSON.stringify(data))
+        } else {
+            data = JSON.parse(localStorage.getItem('data'))
+            data.push(this.state.FormData)
+            localStorage.setItem('data', JSON.stringify(data))
+        }
+    }
+    deletHandler = (i) => {
+
+        const DElETE = this.state.list.filter((item, index) => {
+            return index !== i;
+
+        });
+        this.setState({
+            list: DElETE
+        });
+        localStorage.setItem('data', JSON.stringify(DElETE))
+        this.setState({
+            list: JSON.parse(localStorage.getItem('data'))
+        })
+
+    }
+    updateHandle = (item, i) => {
+
+        this.setState({
+            ...this.state,
+            FormData: {
+                ...this.state.FormData,
+                id: item.id,
+                Fname: item.Fname,
+                Lname: item.Lname,
+                Email: item.Email,
+
+            }
+        })
+    }
+    componentDidMount = () => {
+        this.setState({
+            list: JSON.parse(localStorage.getItem('data'))
+        })
+    }
+
+    render() {
+        return (
+            <div>
+                <h1>TMT LIMITED MANAGEMENT</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <b>Fname:</b>
+                    <p style={{ color: "red" }}>{this.state.error.FnameError}</p>
+                    <input type="text" name="Fname" id="form" placeholder="Enter Fname" value={this.state.FormData.Fname} onChange={this.handleInput}></input><br /><br />
+                    <b>Lname:</b>
+                    <p style={{color:"red"}}>{this.state.error.Lname}</p>
+                    <input type="text" name="Lname" id="form" placeholder="Enter Lname" value={this.state.FormData.Lname} onChange={this.handleInput}></input><br /><br />
+                    <b>Email:</b>
+                    <p style={{color:"red"}}>{this.state.error.Email}</p>
+                    <input type="text" name="Email" id="form" placeholder="Enter Email" value={this.state.FormData.Email} onChange={this.handleInput}></input><br /><br />
+                    <button type="submit">submit</button>
+
+
+                </form>
+                <div align="center">
+                    <table border="1px:solid:black" width="100%">
+                        <tr>
+                            <th>id</th>
+                            <th>Fname</th>
+                            <th>Lname</th>
+                            <th>Email</th>
+                        </tr>
+
+                        {!this.state.list == "" && this.state.list.map((item, i) => (
+                            <tr key={i}>
+                                <td>{item.id}</td>
+                                <td>{item.Fname}</td>
+                                <td>{item.Lname}</td>
+                                <td>{item.Email}</td>
+                                <button type="button" onClick={() => this.deletHandler(i)}>
+                                    Delete
+                    </button>
+                                <button
+                                    type="button"
+                                    onClick={() => this.updateHandle(item)}
+                                >
+                                    UPDATE
+                    </button>
+                            </tr>
+
+                        ))}
+
+
+                    </table>
+
+                </div>
+            </div>
+        )
+    }
+}

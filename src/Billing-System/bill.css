@@ -1,0 +1,47 @@
+input {
+    height: 34px;
+    width: 150px;
+    text-align: center;
+    font-size: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.Contact{
+    margin: 5px;
+    text-align: center;
+    margin-top: 10px;
+    font-size: small;
+}
+.client{
+    margin: 5px;
+    margin-top: 1px;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.address{
+    margin: 5px;
+    text-align: right;
+    font-size: small;
+}
+.card{
+    height: 700px;
+    width: 600px;
+    margin: auto;
+
+}
+.header{
+    background-color: #039dfc;
+    text-align: left;
+    height:110px ;
+    padding:30px;
+    display: flex;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
